@@ -10,7 +10,7 @@ import chicken.butt.Commands.BRSign;
 
 public class App 
 {
-    public static final DiscordApi api = new DiscordApiBuilder().setToken("MTEwMjEwMDU4NjExMzAyODEzOA.GcNK8Y.x802rtYDzgHfp593rUeU89UKcTj-N1Aov19Cuc").setAllNonPrivilegedIntentsAnd(Intent.MESSAGE_CONTENT, Intent.DIRECT_MESSAGES).login().join();
+    public static final DiscordApi api = new DiscordApiBuilder().setToken("").setAllNonPrivilegedIntentsAnd(Intent.MESSAGE_CONTENT, Intent.DIRECT_MESSAGES).login().join();
     public static void main( String[] args )
     {
         System.out.println("logged in :O");
