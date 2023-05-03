@@ -1,29 +1,25 @@
 package chicken.butt.Utility;
 
 import java.io.Serializable;
-import java.time.Instant;
-import java.time.ZoneId;
-import java.time.ZonedDateTime;
-import java.util.NavigableMap;
 import java.util.TreeMap;
 
 import chicken.butt.App;
 
 public class UserData implements Serializable {
-    private static final long serialVersionUID = 2;
+    private static final long serialVersionUID = 1;
 
     private static transient String bathroomRole = "1102821443517030461";
-    private String userID;
+    private long userID;
     private transient boolean signedOut;
 
     private TreeMap<Long, BRData> brData = new TreeMap<Long, BRData>();
     private transient BRData currentBRB;
 
-    public TreeMap<Long, BRData> getUserData() {
+    public TreeMap<Long, BRData> getBRData() {
         return brData;
     }
 
-    public UserData(String userID) {
+    public UserData(long userID) {
         this.userID = userID;
         this.signedOut = false;
     }
@@ -32,7 +28,7 @@ public class UserData implements Serializable {
         try {
             App.api.getUserById(userID).join().addRole(App.api.getRoleById(bathroomRole).get());
 
-            currentBRB = new BRData();
+            currentBRB = new BRData(userID);
             currentBRB.signOut();
             brData.put(currentBRB.getEpochID(), currentBRB);
         } catch (Error e) {

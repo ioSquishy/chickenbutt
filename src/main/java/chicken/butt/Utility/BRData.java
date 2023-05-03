@@ -6,20 +6,26 @@ import java.time.ZoneId;
 import java.time.ZonedDateTime;
 
 public class BRData implements Serializable {
-    private static final long serialVersionUID = 3;
+    private static final long serialVersionUID = 2;
 
     private long epochId;
+    private long userID;
     private ZonedDateTime signOut;
     private ZonedDateTime signIn;
     private int breakLength;
 
-    public BRData () {
+    public BRData (long userID) {
         epochId = Instant.now().toEpochMilli();
+        this.userID = userID;
         breakLength = 0;
     }
 
     public long getEpochID() {
         return epochId;
+    }
+
+    public long getUserID() {
+        return userID;
     }
 
     public void signOut() {
