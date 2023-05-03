@@ -31,5 +31,12 @@ public class Data implements Serializable {
 
         return getDataBetween(timeA, timeB);
     }
+
+	public HashMap<Long, <HashMap<Long, ArrayList<BRData>> getDataLastWeekPerUser() {
+		ArrayList<HashMap<Long, ArrayList<BRData>> result = new ArrayList<>();
+		getDataLastWeek().forEach((key, value) -> {
+			
+		});
+	}
     
 }
