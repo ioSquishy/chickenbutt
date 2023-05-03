@@ -16,12 +16,13 @@ import org.javacord.api.DiscordApi;
 import org.javacord.api.DiscordApiBuilder;
 import org.javacord.api.entity.intent.Intent;
 
-
 import chicken.butt.Commands.BRSign;
 import chicken.butt.Utility.UserData;
 
+import io.github.cdimascio.dotenv.Dotenv;
+
 public class App implements Serializable {
-    public static final DiscordApi api = new DiscordApiBuilder().setToken("").setAllNonPrivilegedIntentsAnd(Intent.MESSAGE_CONTENT, Intent.DIRECT_MESSAGES).login().join();
+    public static final DiscordApi api = new DiscordApiBuilder().setToken(Dotenv.load().get("TOKEN")).setAllNonPrivilegedIntentsAnd(Intent.MESSAGE_CONTENT, Intent.DIRECT_MESSAGES).login().join();
     // serialize stuff
     private static final long serialVersionUID = 0;
     private static ArrayList<UserData> ppl = new ArrayList<UserData>();
