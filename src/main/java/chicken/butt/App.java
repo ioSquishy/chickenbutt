@@ -2,9 +2,11 @@ package chicken.butt;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.NavigableMap;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -17,15 +19,16 @@ import org.javacord.api.DiscordApiBuilder;
 import org.javacord.api.entity.intent.Intent;
 
 import chicken.butt.Commands.BRSign;
+import chicken.butt.Utility.BRData;
 import chicken.butt.Utility.UserData;
 
 import io.github.cdimascio.dotenv.Dotenv;
 
 public class App implements Serializable {
-    public static final DiscordApi api = new DiscordApiBuilder().setToken(Dotenv.load().get("TOKEN")).setAllNonPrivilegedIntentsAnd(Intent.MESSAGE_CONTENT, Intent.DIRECT_MESSAGES).login().join();
+    public static final DiscordApi api = new DiscordApiBuilder().setToken(Dotenv.load().get("KANNA_TOKEN")).setAllNonPrivilegedIntentsAnd(Intent.MESSAGE_CONTENT, Intent.DIRECT_MESSAGES).login().join();
     // serialize stuff
     private static final long serialVersionUID = 0;
-    private static ArrayList<UserData> ppl = new ArrayList<UserData>();
+    public static ArrayList<UserData> users = new ArrayList<UserData>();
 
     private static transient ScheduledExecutorService autoSave = Executors.newSingleThreadScheduledExecutor();
     private static transient Runnable backup = () -> {
@@ -40,15 +43,19 @@ public class App implements Serializable {
     {
         System.out.println("logged in :O");
 
+        // serialize stuff
         try {
             retrieveData();
         } catch (ClassNotFoundException | IOException e) {
             api.getOwner().get().join().sendMessage("could not retrieve data :(").join();
         }
+        autoSave.scheduleWithFixedDelay(backup, 1, 1, TimeUnit.MINUTES);
 
+        // slash commands
         long climbMaxing = 1069042405388583053L;
         new BRSign().createPeerexCmd().createForServer(api, climbMaxing).join();
 
+        // listeners
         api.addMessageCreateListener(event -> {
             if (event.getMessage().getContent().toLowerCase().contains("what")) {
                 try {
@@ -63,7 +70,6 @@ public class App implements Serializable {
 
         api.addSlashCommandCreateListener(event -> {
             String cmd = event.getSlashCommandInteraction().getCommandName();
-
             switch (cmd) {
                 case "peerex" :
                     BRSign.runCmd(event.getInteraction().getUser().getIdAsString());
@@ -71,25 +77,29 @@ public class App implements Serializable {
             }
         });
 
-
-        
+        api.addButtonClickListener(event -> {
+            String id = event.getButtonInteraction().getIdAsString();
+            switch (id) {
+                case "peerex" :
+                    break;
+            }
+        });
     }
 
-    //serialize stuff
+    // serialize stuff
     private static void saveData() throws IOException {
         File file = new File("userData.ser");
         file.createNewFile();
         FileOutputStream fos = new FileOutputStream(file);
         ObjectOutputStream out = new ObjectOutputStream(fos);
-        out.writeObject(ppl);
+        out.writeObject(users);
         out.close();
         fos.close();
     }
-
     private static void retrieveData() throws ClassNotFoundException, IOException {
         FileInputStream fin = new FileInputStream("userData.ser");
         ObjectInputStream in = new ObjectInputStream(fin);
-        ppl = (ArrayList) in.readObject();
+        users = (ArrayList) in.readObject();
         in.close();
         fin.close();
 
