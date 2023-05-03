@@ -4,7 +4,6 @@ import org.javacord.api.interaction.SlashCommandBuilder;
 
 public class BRSign {
 	
-
     public SlashCommandBuilder createPeerexCmd() {
         return new SlashCommandBuilder()
             .setName("peerex")
@@ -12,9 +11,4 @@ public class BRSign {
             .setDefaultEnabledForEveryone()
 			.setEnabledInDms(false);
     }
-
-    public static void runCmd(String userID) {
-        
-    }
-
 }
