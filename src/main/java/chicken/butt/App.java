@@ -30,25 +30,35 @@ public class App {
 
         // listeners
         api.addMessageCreateListener(event -> {
-            if (event.getMessage().getContent().toLowerCase().contains("what")) {
+            String msg = event.getMessage().getContent().toLowerCase();
+
+            if (msg.contains("what") || msg.contains("wut")) {
                 try {
-                    event.getMessage().reply("chicken butt").get();
+                    if (msg.contains("what")) {
+                        event.getMessage().reply("chicken butt").get();
+                    } else {
+                        event.getMessage().reply("chicken but").get();
+                    }
                     Data.addChickenButt(event.getMessageAuthor().getId());
                 } catch (Error | InterruptedException | ExecutionException e) {
                     try {
-                        event.getMessageAuthor().asUser().get().sendMessage("chicken butt").get();
+                        if (msg.contains("what")) {
+                            event.getMessageAuthor().asUser().get().sendMessage("chicken butt").get();
+                        } else {
+                            event.getMessageAuthor().asUser().get().sendMessage("chicken but").get();
+                        }
                     } catch (Error | InterruptedException | ExecutionException ee) {}
                 }
             }
-
             
-            String msg = event.getMessage().getContent().toLowerCase();
             switch (msg) {
                 case "/chickenbutts" :
                     event.getMessage().reply(ChickenButtRanks.createEmbed()).join();
                     break;
                 case "/peerex" :
                     Data.brbUpdate(event.getMessageAuthor().getId());
+                    break;
+                case "/downloaddata" :
                     break;
             }
             
@@ -75,6 +85,10 @@ public class App {
             switch (id) {
                 case "peerex" :
                     Data.brbUpdate(event.getInteraction().getUser().getId());
+                    event.getButtonInteraction().acknowledge().join();
+                    break;
+                case "undo" :
+                    Data.removeLastBRB(event.getInteraction().getUser().getId());
                     event.getButtonInteraction().acknowledge().join();
                     break;
             }

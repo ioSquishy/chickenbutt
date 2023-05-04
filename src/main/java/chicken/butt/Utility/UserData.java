@@ -3,6 +3,7 @@ package chicken.butt.Utility;
 import java.io.Serializable;
 import java.time.format.DateTimeFormatter;
 import java.util.TreeMap;
+import java.util.Map.Entry;
 
 import chicken.butt.App;
 import chicken.butt.Commands.BRSheet;
@@ -20,6 +21,14 @@ public class UserData implements Serializable {
 
     public TreeMap<Long, BRData> getBRData() {
         return brData;
+    }
+
+    public Entry<Long, BRData> removeLastEntry() {
+        Entry<Long, BRData> lastEntry = brData.lastEntry();
+        if (lastEntry != null) {
+            brData.remove(lastEntry.getKey());
+        }
+        return lastEntry;
     }
 
     public UserData(long userID) {

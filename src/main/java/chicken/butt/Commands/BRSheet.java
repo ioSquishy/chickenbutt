@@ -35,36 +35,17 @@ public class BRSheet {
     public static void createEmbed(TextChannel channel) {
         EmbedBuilder embed = new EmbedBuilder()
             .setTitle("Bathroom Sign In/Out Sheet")
-            .addInlineField("╭⋅ User ⋅╮", "a")
-            .addInlineField("╭⋅ Sign Out ⋅╮", "b")
-            .addInlineField("╭⋅ Sign In⋅╮", "c")
+            .addInlineField("╭⋅ User ⋅╮", "")
+            .addInlineField("╭⋅ Sign Out ⋅╮", "")
+            .addInlineField("╭⋅ Sign In⋅╮", "")
             .setColor(Color.YELLOW);
 
         msgLink = new MessageBuilder()
             .setEmbed(embed)
-            .addActionRow(Button.create("peerex", ButtonStyle.PRIMARY, "Sign In/Out"))
+            .addActionRow(
+                Button.create("peerex", ButtonStyle.PRIMARY, "Sign In/Out"),
+                Button.create("undo", ButtonStyle.DANGER, "Remove Your Last Entry"))
             .send(channel).join().getLink().toString();
-    }
-
-    public static void updateEmbed(String userName, String timeOut, String timeIn) {
-        Message msg = App.api.getMessageByLink(msgLink).get().join();
-        List<EmbedField> fields = msg.getEmbeds().get(0).getFields();
-
-        System.out.println(fields.get(0).getValue());
-    }
-
-    public static void signOut(long userID, String timeOut) {
-        Message msg = App.api.getMessageByLink(msgLink).get().join();
-        List<EmbedField> fields = msg.getEmbeds().get(0).getFields();
-
-        EmbedBuilder embed = new EmbedBuilder()
-            .setTitle("Bathroom Sign In/Out Sheet")
-            .addInlineField("╭⋅ User ⋅╮", fields.get(0).getValue() + "\n" + App.api.getUserById(userID).join().getName())
-            .addInlineField("╭⋅ Sign Out ⋅╮", fields.get(1).getValue() + "\n" + timeOut)
-            .addInlineField("╭⋅ Sign In⋅╮", fields.get(2).getValue() + "\n" + hourGlass)
-            .setColor(Color.YELLOW);
-        
-        msg.edit(embed).join();
     }
 
     public static void updateEmbed() {

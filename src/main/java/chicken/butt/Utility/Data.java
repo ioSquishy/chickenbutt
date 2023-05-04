@@ -14,6 +14,7 @@ import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.NavigableMap;
 import java.util.TreeMap;
+import java.util.Map.Entry;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -130,7 +131,15 @@ public class Data implements Serializable {
         todaysData.putIfAbsent(data.getEpochID(), data);
         BRSheet.updateEmbed();
     }
-
+    public static void removeLastBRB(long userID) {
+        UserData userData = getUserData(userID);
+        Entry<Long, BRData> lastEntry = userData.removeLastEntry();
+        
+        if (lastEntry != null) {
+            todaysData.remove(lastEntry.getKey());
+            BRSheet.updateEmbed();
+        }
+    }
 
     public static TreeMap<Long, BRData> getAllData() {
         TreeMap<Long, BRData> data = new TreeMap<>();
