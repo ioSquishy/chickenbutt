@@ -4,7 +4,7 @@ import org.javacord.api.interaction.SlashCommandBuilder;
 
 public class BRSign {
 	
-    public SlashCommandBuilder createPeerexCmd() {
+    public static SlashCommandBuilder createPeerexCmd() {
         return new SlashCommandBuilder()
             .setName("peerex")
             .setDescription("you need to pee RN!! 🦖")

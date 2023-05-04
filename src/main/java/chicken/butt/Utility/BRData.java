@@ -35,6 +35,14 @@ public class BRData implements Serializable {
     public void signIn() {
         signIn = ZonedDateTime.now(ZoneId.of("America/Los_Angeles"));
         breakLength = (int) (signIn.toEpochSecond() - signOut.toEpochSecond());
+        System.out.println(signOut.toEpochSecond() + " -> " + signIn.toEpochSecond() + " = " + breakLength); //
+    }
+
+    public ZonedDateTime getSignOutTime() {
+        return signOut;
+    }
+    public ZonedDateTime getSignInTime() {
+        return signIn;
     }
 
     public int getBreakLength() {
