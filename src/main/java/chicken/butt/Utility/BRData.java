@@ -10,8 +10,8 @@ public class BRData implements Serializable {
 
     private long epochId;
     private long userID;
-    private ZonedDateTime signOut;
-    private ZonedDateTime signIn;
+    private ZonedDateTime signOut = null;
+    private ZonedDateTime signIn = null;
     private int breakLength;
 
     public BRData (long userID) {

@@ -1,9 +1,7 @@
 package chicken.butt.Utility;
 
 import java.io.Serializable;
-import java.text.SimpleDateFormat;
 import java.time.format.DateTimeFormatter;
-import java.time.format.DateTimeFormatterBuilder;
 import java.util.TreeMap;
 
 import chicken.butt.App;
@@ -30,10 +28,13 @@ public class UserData implements Serializable {
         this.signedOut = false;
     }
 
-    public void addButt() {
-        this.chickenButts+=1;
+    public long getUserID() {
+        return userID;
     }
 
+    public void addButt() {
+        this.chickenButts++;
+    }
     public int getChickenButts() {
         return this.chickenButts;
     }
@@ -46,7 +47,6 @@ public class UserData implements Serializable {
             currentBRB = new BRData(userID);
             currentBRB.signOut();
             brData.put(currentBRB.getEpochID(), currentBRB);
-            BRSheet.signOut(userID, currentBRB.getSignOutTime().format(DateTimeFormatter.ofPattern("h:mm a")));
         } catch (Error e) {
             App.api.getOwner().get().join().sendMessage("I don't have permissions to change roles T-T").join();
         }
@@ -65,12 +65,13 @@ public class UserData implements Serializable {
         signedOut = false;
     }
 
-    public void switchSign() {
+    public BRData switchSign() {
         if (signedOut) {
             signIn();
         } else {
             signOut();
         }
+        return currentBRB;
     }
 
     public void setBathroomRole(String roleID) {

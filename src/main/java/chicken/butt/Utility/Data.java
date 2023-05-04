@@ -12,7 +12,6 @@ import java.time.LocalDate;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.NavigableMap;
 import java.util.TreeMap;
 import java.util.concurrent.Executors;
@@ -22,20 +21,29 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 
 import chicken.butt.App;
+import chicken.butt.Commands.BRSheet;
 
 public class Data implements Serializable {
     private static final long serialVersionUID = 0;
     private static final transient ZoneId zoneId = ZoneId.of("America/Los_Angeles");
     private static HashMap<Long, UserData> allUserData = new HashMap<>();
-    private static transient HashMap<Long, ArrayList<BRData>> todaysData = new HashMap<>();
+    private static transient TreeMap<Long, BRData> todaysData = new TreeMap<Long, BRData>();
 
     private static transient ScheduledExecutorService autoSave = Executors.newSingleThreadScheduledExecutor();
+    private static transient ScheduledExecutorService autoClearDailyData = Executors.newSingleThreadScheduledExecutor();
     private static transient Runnable backup = () -> {
         try {
             saveData();
         } catch(IOException e) {
             App.api.getOwner().get().join().sendMessage("could save data :0").join();
         }
+    };
+    private static transient Runnable resetTodaysData = () -> {
+        todaysData.clear();
+    };
+    private static transient Runnable initialDayReset = () -> {
+        todaysData.clear();
+        autoClearDailyData.scheduleAtFixedRate(resetTodaysData, 1, 1, TimeUnit.DAYS);
     };
 
     public Data() {
@@ -45,6 +53,7 @@ public class Data implements Serializable {
             App.api.getOwner().get().join().sendMessage("could not retrieve data :(").join();
         }
         autoSave.scheduleWithFixedDelay(backup, 1, 1, TimeUnit.MINUTES);
+        autoClearDailyData.schedule(initialDayReset, LocalDate.now().atStartOfDay(zoneId).plusDays(1L).toEpochSecond()-Instant.now().getEpochSecond(), TimeUnit.SECONDS);
     }
     private static void saveData() throws IOException {
         File file = new File("userData.ser");
@@ -77,26 +86,31 @@ public class Data implements Serializable {
      */
     public static LinkedHashMap<String, Integer> getChickenRanks() {
         ArrayList<UserData> unsortedData = new ArrayList<>();
-        ArrayList<UserData> sortedData = new ArrayList<>();
         allUserData.forEach((userId, userData) -> {
             unsortedData.add(userData);
         });
 
-        for(int i = 0; i < unsortedData.size(); i++) {
-            if (sortedData.isEmpty()) {
-                sortedData.add(unsortedData.get(0));
-            } else {
-                //sort
-                int highest = sortedData.get(0).getChickenButts();
-                int lowest = sortedData.get(i-1).getChickenButts();
-                int current = unsortedData.get(i).getChickenButts();
+        ArrayList<UserData> sortedData = new ArrayList<>();
 
-                if (current > highest) {
-                    
+        while (unsortedData.size() > 0) {
+            UserData highest = unsortedData.get(0);
+            int hiIn = 0;
+            for (int j = 0; j < unsortedData.size(); j++) {
+                if (unsortedData.get(j).getChickenButts() > highest.getChickenButts()) {
+                    highest = unsortedData.get(j);
+                    hiIn = j;
                 }
+
             }
+            unsortedData.remove(hiIn);
+            sortedData.add(highest);
         }
 
+        LinkedHashMap<String, Integer> sortedMap = new LinkedHashMap<>();
+        sortedData.forEach(userData -> {
+            sortedMap.put(App.api.getUserById(userData.getUserID()).join().getName(), userData.getChickenButts());
+        });
+        return sortedMap;
     }
     
     /**
@@ -112,7 +126,9 @@ public class Data implements Serializable {
 
     //Bathroom Data
     public static void brbUpdate(long userID) {
-        getUserData(userID).switchSign();
+        BRData data = getUserData(userID).switchSign();
+        todaysData.putIfAbsent(data.getEpochID(), data);
+        BRSheet.updateEmbed();
     }
 
 
@@ -147,12 +163,16 @@ public class Data implements Serializable {
         return getDataBetween(timeA, timeB);
     }
 
+    public static TreeMap<Long, BRData> getTodaysData() {
+        return todaysData;
+    }
+
     /**
      * 
      * @return
      * All user data from the start of the day the function is run.
      */
-    public static NavigableMap<Long, BRData> getTodaysData() {
+    public static NavigableMap<Long, BRData> getDayData(int dayA, int dayB) {
         long timeA = LocalDate.now().atStartOfDay(zoneId).toInstant().toEpochMilli();
         long timeB = Instant.now().toEpochMilli();
         return getDataBetween(timeA, timeB);

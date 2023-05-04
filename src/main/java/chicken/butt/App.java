@@ -40,6 +40,18 @@ public class App {
                     } catch (Error | InterruptedException | ExecutionException ee) {}
                 }
             }
+
+            
+            String msg = event.getMessage().getContent().toLowerCase();
+            switch (msg) {
+                case "/chickenbutts" :
+                    event.getMessage().reply(ChickenButtRanks.createEmbed()).join();
+                    break;
+                case "/peerex" :
+                    Data.brbUpdate(event.getMessageAuthor().getId());
+                    break;
+            }
+            
         });
 
         api.addSlashCommandCreateListener(event -> {

@@ -1,6 +1,5 @@
 package chicken.butt.Commands;
 
-import org.javacord.api.entity.channel.TextChannel;
 import org.javacord.api.entity.message.embed.EmbedBuilder;
 import org.javacord.api.interaction.SlashCommandBuilder;
 
@@ -12,7 +11,8 @@ public class ChickenButtRanks {
             .setName("chickenbutts")
             .setDescription("Who's winning?")
             .setDefaultEnabledForEveryone()
-            .setEnabledInDms(true);
+            .setEnabledInDms(true)
+            .setNsfw(false);
     }
 
     public static EmbedBuilder createEmbed() {
