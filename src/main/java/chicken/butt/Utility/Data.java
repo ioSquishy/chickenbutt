@@ -41,6 +41,7 @@ public class Data implements Serializable {
     };
     private static transient Runnable resetTodaysData = () -> {
         todaysData.clear();
+        BRSheet.updateEmbed();
     };
     private static transient Runnable initialDayReset = () -> {
         todaysData.clear();
