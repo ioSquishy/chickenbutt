@@ -3,18 +3,16 @@ package chicken.butt.Commands;
 import java.awt.Color;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.List;
-import java.util.Map.Entry;
 
 import org.javacord.api.entity.channel.TextChannel;
 import org.javacord.api.entity.message.Message;
 import org.javacord.api.entity.message.MessageBuilder;
 import org.javacord.api.entity.message.embed.EmbedBuilder;
-import org.javacord.api.entity.message.embed.EmbedField;
 import org.javacord.api.interaction.SlashCommandBuilder;
 
 import chicken.butt.App;
 import chicken.butt.Utility.BRData;
+import chicken.butt.Utility.Cache;
 import chicken.butt.Utility.Data;
 
 import org.javacord.api.entity.message.component.Button;
@@ -56,12 +54,12 @@ public class BRSheet {
         String signIn = "";
 
         for (BRData brData : Data.getTodaysData().values()) {
-            user += App.api.getUserById(brData.getUserID()).join().getName() + "\n";
-            signOut += brData.getSignOutTime().format(DateTimeFormatter.ofPattern("h:mm a")) + "\n";
+            user += Cache.getUsername(brData.getUserID()) + "\n";
+            signOut += Data.formatTime(brData.getSignOutTime()) + "\n";
 
             ZonedDateTime signInTime = brData.getSignInTime();
             if (signInTime != null) {
-                signIn += signInTime.format(DateTimeFormatter.ofPattern("h:mm a")) + "\n";
+                signIn += Data.formatTime(signInTime) + "\n";
             } else {
                 signIn += hourGlass + "\n";
             };

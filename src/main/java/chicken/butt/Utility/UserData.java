@@ -1,12 +1,10 @@
 package chicken.butt.Utility;
 
 import java.io.Serializable;
-import java.time.format.DateTimeFormatter;
 import java.util.TreeMap;
 import java.util.Map.Entry;
 
 import chicken.butt.App;
-import chicken.butt.Commands.BRSheet;
 
 public class UserData implements Serializable {
     private static final long serialVersionUID = 1;

@@ -10,6 +10,7 @@ import org.javacord.api.entity.message.MessageFlag;
 import chicken.butt.Commands.BRSheet;
 import chicken.butt.Commands.BRSign;
 import chicken.butt.Commands.ChickenButtRanks;
+import chicken.butt.Utility.Cache;
 import chicken.butt.Utility.Data;
 import io.github.cdimascio.dotenv.Dotenv;
 
@@ -21,6 +22,8 @@ public class App {
         System.out.println("logged in :O");
         //init data
         new Data();
+        //init cache clearing
+        new Cache();
 
         // slash commands
         long climbMaxing = 1069042405388583053L;

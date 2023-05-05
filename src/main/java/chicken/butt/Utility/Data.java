@@ -11,6 +11,7 @@ import java.time.Instant;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.NavigableMap;
 import java.util.TreeMap;
@@ -202,6 +203,15 @@ public class Data implements Serializable {
 		});
         return result;
 	}
+
+    /**
+     * 
+     * @param zdt
+     * @return zdt in the format: hr:minute am/pm
+     */
+    public static String formatTime(ZonedDateTime zdt) {
+        return zdt.format(DateTimeFormatter.ofPattern("h:mm a"));
+    }
 
     
 }

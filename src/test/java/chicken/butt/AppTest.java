@@ -13,23 +13,15 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
+import org.apache.commons.math3.stat.descriptive.SynchronizedSummaryStatistics;
 import org.junit.Test;
 
 public class AppTest 
 {
-    private static final transient ZoneId zoneId = ZoneId.of("America/Los_Angeles");
-    private static transient ScheduledExecutorService autoClearDailyData = Executors.newSingleThreadScheduledExecutor();
-    private static transient Runnable resetTodaysData = () -> {
-        System.out.println("reset");
-    };
-    private static transient Runnable initialDayReset = () -> {
-        System.out.println("reset");
-        autoClearDailyData.scheduleAtFixedRate(resetTodaysData, 5, 5, TimeUnit.SECONDS);
-    };
     public static void main(String[] args) {
-        //autoClearDailyData.schedule(initialDayReset, , TimeUnit.SECONDS);
-        System.out.println(Instant.now().getEpochSecond());
-        System.out.println(LocalDate.now().atStartOfDay(zoneId).plusDays(1L).toEpochSecond());
-        System.out.println(LocalDate.now().atStartOfDay(zoneId).plusDays(1L).toEpochSecond()-Instant.now().getEpochSecond());
+        String number = "3";
+        int answer = Integer.parseInt(number)-1;
+
+        System.out.println(answer);
     }
 }
