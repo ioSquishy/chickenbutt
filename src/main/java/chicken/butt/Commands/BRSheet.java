@@ -2,7 +2,6 @@ package chicken.butt.Commands;
 
 import java.awt.Color;
 import java.time.ZonedDateTime;
-import java.time.format.DateTimeFormatter;
 
 import org.javacord.api.entity.channel.TextChannel;
 import org.javacord.api.entity.message.Message;

@@ -6,30 +6,40 @@ import org.javacord.api.DiscordApi;
 import org.javacord.api.DiscordApiBuilder;
 import org.javacord.api.entity.intent.Intent;
 import org.javacord.api.entity.message.MessageFlag;
+import org.javacord.api.entity.message.component.ActionRow;
+import org.javacord.api.entity.message.component.Button;
+import org.javacord.api.entity.message.component.ButtonStyle;
 
 import chicken.butt.Commands.BRSheet;
 import chicken.butt.Commands.BRSign;
 import chicken.butt.Commands.ChickenButtRanks;
+import chicken.butt.Commands.Entries;
 import chicken.butt.Utility.Cache;
 import chicken.butt.Utility.Data;
 import io.github.cdimascio.dotenv.Dotenv;
 
 public class App {
-    public static final DiscordApi api = new DiscordApiBuilder().setToken(Dotenv.load().get("TOKEN")).setAllNonPrivilegedIntentsAnd(Intent.MESSAGE_CONTENT, Intent.DIRECT_MESSAGES).login().join();
+    public static final DiscordApi api = new DiscordApiBuilder().setToken(Dotenv.load().get("TOKEN")).setAllNonPrivilegedIntentsAnd(Intent.MESSAGE_CONTENT, Intent.DIRECT_MESSAGES, Intent.GUILD_PRESENCES).login().join();
     
     public static void main( String[] args )
     {
         System.out.println("logged in :O");
         //init data
         new Data();
-        //init cache clearing
-        new Cache();
 
         // slash commands
         long climbMaxing = 1069042405388583053L;
         BRSign.createPeerexCmd().createForServer(api, climbMaxing).join();
         BRSheet.createCmd().createForServer(api, climbMaxing).join();
         ChickenButtRanks.createCmd().createForServer(api, climbMaxing).join();
+        Entries.createAllEntriesCmd().createForServer(api, climbMaxing).join();
+        
+        /*try {
+            api.getServerSlashCommands(api.getServerById(climbMaxing).get()).get().forEach(cmd -> {
+                System.out.println(cmd.getName() + ": " + cmd.getId());
+            });
+        } catch (InterruptedException | ExecutionException e) {} */
+        //api.getServerSlashCommandById(api.getServerById(climbMaxing).get(), 1104244545216057416L).join().delete().join();
 
         // listeners
         api.addMessageCreateListener(event -> {
@@ -80,6 +90,11 @@ public class App {
                     break;
                 case "chickenbutts" :
                     event.getInteraction().createImmediateResponder().addEmbed(ChickenButtRanks.createEmbed()).respond().join();
+                    break;
+                case "allentries" :
+                    event.getInteraction().createImmediateResponder().setContent("Compiling data. . .").setFlags(MessageFlag.EPHEMERAL).respond().join();
+                    Entries.sendAllEntriesEmbed(event.getInteraction().getChannel().get());
+                    break;
             }
         });
 
@@ -94,7 +109,17 @@ public class App {
                     Data.removeLastBRB(event.getInteraction().getUser().getId());
                     event.getButtonInteraction().acknowledge().join();
                     break;
+                case "left" :
+                    event.getButtonInteraction().acknowledge().join();
+                    break;
+                case "right" :
+                    event.getButtonInteraction().acknowledge().join();
+                    break;
             }
+        });
+
+        api.addUserChangeNameListener(event -> {
+            Cache.updateUsername(event.getUser().getId(), event.getUser().getName());
         });
     }
 }
