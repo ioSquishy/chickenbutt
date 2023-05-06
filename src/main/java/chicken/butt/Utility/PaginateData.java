@@ -10,17 +10,13 @@ public class PaginateData {
     private TreeMap<Integer, HashMap<String, String>> pages = new TreeMap<Integer, HashMap<String, String>>();
     private ArrayList<String> epochIds = new ArrayList<String>();
     private ArrayList<String> usernames = new ArrayList<String>();
-    private ArrayList<String> signOuts = new ArrayList<String>();
-    private ArrayList<String> signIns = new ArrayList<String>();
-    private ArrayList<String> totalTimes = new ArrayList<String>();
+    private ArrayList<String> times = new ArrayList<String>();
 
     /**
      * <strong>Keys:</strong><p>
      * epochId<p>
      * username<p>
-     * signOut<p>
-     * signIn<p>
-     * totalTime
+     * time
      * @param index
      * @return
      */
@@ -36,9 +32,7 @@ public class PaginateData {
      * <strong>Keys:</strong><p>
      * epochId<p>
      * username<p>
-     * signOut<p>
-     * signIn<p>
-     * totalTime
+     * time
      * @param currentPageIndex
      * @return New Page, Entries
      */
@@ -58,9 +52,7 @@ public class PaginateData {
      * <strong>Keys:</strong><p>
      * epochId<p>
      * username<p>
-     * signOut<p>
-     * signIn<p>
-     * totalTime
+     * time
      * @param currentPageIndex
      * @return New Page, Entries
      */
@@ -80,9 +72,7 @@ public class PaginateData {
         for (Entry<Long, BRData> entry : Data.getAllData().entrySet()) {
             epochIds.add(entry.getKey() +"");
             usernames.add(Cache.getUsername(entry.getValue().getUserID()));
-            signOuts.add(Data.formatTime(entry.getValue().getSignOutTime()));
-            signIns.add(Data.formatTime(entry.getValue().getSignInTime()));
-            totalTimes.add(entry.getValue().getBreakLength() +"");
+            times.add(Data.formatTime(entry.getValue().getSignOutTime()) + " -> " + Data.formatTime(entry.getValue().getSignInTime()) + " | " + entry.getValue().getBreakLength());
         }
         
         int entiresPerPage = data.size()/calculatePages(data.size());
@@ -92,9 +82,7 @@ public class PaginateData {
             if (i % entiresPerPage == 0 && i > 0) {
                 pageEntry.put("epochId", pageEntry.get("epochId") + "\n" + epochIds.get(i));
                 pageEntry.put("username", pageEntry.get("username") + "\n" + usernames.get(i));
-                pageEntry.put("signOut", pageEntry.get("signOut") + "\n" + signOuts.get(i));
-                pageEntry.put("signIn", pageEntry.get("signIn") + "\n" + signIns.get(i));
-                pageEntry.put("totalTime", pageEntry.get("totalTime") + "\n" + totalTimes.get(i));
+                pageEntry.put("time", pageEntry.get("time") + "\n" + times.get(i));
 
                 this.pages.put(pageIndex, pageEntry);
                 pageEntry = new HashMap<String, String>(5);
@@ -102,9 +90,7 @@ public class PaginateData {
             } else {
                 pageEntry.put("epochId", pageEntry.get("epochId") + "\n" + epochIds.get(i));
                 pageEntry.put("username", pageEntry.get("username") + "\n" + usernames.get(i));
-                pageEntry.put("signOut", pageEntry.get("signOut") + "\n" + signOuts.get(i));
-                pageEntry.put("signIn", pageEntry.get("signIn") + "\n" + signIns.get(i));
-                pageEntry.put("totalTime", pageEntry.get("totalTime") + "\n" + totalTimes.get(i));
+                pageEntry.put("time", pageEntry.get("time") + "\n" + times.get(i));
             }
         }
         this.pages.put(pageIndex, pageEntry);
@@ -114,27 +100,19 @@ public class PaginateData {
         int pages = 1;
         int epochLength = 0;
         int usernameLength = 0;
-        int signOutLength = 0;
-        int signInLength = 0;
-        int totalTimeLength = 0;
+        int timeLength = 0;
 
         for (int i = 0; i < dataSize; i++) {
             epochLength += epochIds.get(i).length();
             usernameLength += usernames.get(i).length();
-            signOutLength += signOuts.get(i).length();
-            signInLength += signIns.get(i).length();
-            totalTimeLength += totalTimes.get(i).length();
+            timeLength += times.get(i).length();
 
             boolean newPage = false;
             if (epochLength > maxStringLength) {
                 newPage = true;
             } else if (usernameLength > maxStringLength) {
                 newPage = true;
-            } else if (signOutLength > maxStringLength) {
-                newPage = true;
-            } else if (signInLength > maxStringLength) {
-                newPage = true;
-            } else if (totalTimeLength > maxStringLength) {
+            } else if (timeLength > maxStringLength) {
                 newPage = true;
             }
 
@@ -143,9 +121,7 @@ public class PaginateData {
                 pages++;
                 epochLength = epochIds.get(i).length();
                 usernameLength = usernames.get(i).length();
-                signOutLength = signOuts.get(i).length();
-                signInLength = signIns.get(i).length();
-                totalTimeLength = totalTimes.get(i).length();
+                timeLength = times.get(i).length();
             }
         }
         return pages;

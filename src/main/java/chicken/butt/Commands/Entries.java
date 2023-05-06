@@ -41,9 +41,7 @@ public class Entries {
         HashMap<String, String> pageEntries = embedData.getPageEntries(0);
         embed.addField("Epoch ID", pageEntries.get("epochId"), true);
         embed.addField("Username", pageEntries.get("username"), true);
-        embed.addField("Sign Out", pageEntries.get("signOut"), true);
-        embed.addField("Sign In", pageEntries.get("signIn"), true);
-        embed.addField("Total Time", pageEntries.get("totalTime"), true);
+        embed.addField("Time", pageEntries.get("time"), true);
         
         new MessageBuilder()
             .setEmbed(embed)
