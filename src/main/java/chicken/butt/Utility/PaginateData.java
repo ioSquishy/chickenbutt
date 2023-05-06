@@ -69,10 +69,12 @@ public class PaginateData {
     }
 
     public PaginateData(TreeMap<Long, BRData> data) {
-        for (Entry<Long, BRData> entry : Data.getAllData().entrySet()) {
-            epochIds.add(entry.getKey() +"");
-            usernames.add(Cache.getUsername(entry.getValue().getUserID()));
-            times.add(Data.formatTime(entry.getValue().getSignOutTime()) + " -> " + Data.formatTime(entry.getValue().getSignInTime()) + " | " + entry.getValue().getBreakLength());
+        for (Entry<Long, BRData> entry : data.entrySet()) {
+            if (entry.getKey() != null) {
+                epochIds.add(entry.getKey() +"");
+                usernames.add(Cache.getUsername(entry.getValue().getUserID()));
+                times.add(Data.formatTime(entry.getValue().getSignOutTime()) + " -> " + Data.formatTime(entry.getValue().getSignInTime()) + " | " + entry.getValue().getBreakLength());
+            }
         }
         
         int entiresPerPage = data.size()/calculatePages(data.size());

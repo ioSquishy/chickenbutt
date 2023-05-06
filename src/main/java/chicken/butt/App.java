@@ -74,7 +74,11 @@ public class App {
                 case "/peerex" :
                     Data.brbUpdate(event.getMessageAuthor().getId());
                     break;
-                case "/downloaddata" :
+                case "/allentries" :
+                    Entries.sendAllEntriesEmbed(event.getChannel());
+                    break;
+                case "/deletedentries" :
+                    Entries.sendDeletedEntriesEmbed(event.getChannel());
                     break;
             }
             
