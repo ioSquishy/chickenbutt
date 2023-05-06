@@ -21,6 +21,13 @@ public class UserData implements Serializable {
         return brData;
     }
 
+    public void addEntry(BRData data) {
+        brData.put(data.getEpochID(), data);
+    }
+    public BRData removeEntry(long epochId) {
+        return brData.remove(epochId);
+    }
+
     public Entry<Long, BRData> removeLastEntry() {
         Entry<Long, BRData> lastEntry = brData.lastEntry();
         if (lastEntry != null) {

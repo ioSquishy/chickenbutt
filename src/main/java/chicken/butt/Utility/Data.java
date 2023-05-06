@@ -30,6 +30,7 @@ public class Data implements Serializable {
     private static final transient ZoneId zoneId = ZoneId.of("America/Los_Angeles");
     private static HashMap<Long, UserData> allUserData = new HashMap<>();
     private static transient TreeMap<Long, BRData> todaysData = new TreeMap<Long, BRData>();
+    private static transient TreeMap<Long, BRData> deletedEntries = new TreeMap<>();
 
     private static transient ScheduledExecutorService autoSave = Executors.newSingleThreadScheduledExecutor();
     private static transient ScheduledExecutorService autoClearDailyData = Executors.newSingleThreadScheduledExecutor();
@@ -140,6 +141,28 @@ public class Data implements Serializable {
         if (lastEntry != null) {
             todaysData.remove(lastEntry.getKey());
             BRSheet.updateEmbed();
+        }
+    }
+
+    public static boolean removeEntry(long epochID) {
+        BRData entry = getUserData(getAllData().get(epochID).getUserID()).removeEntry(epochID);
+        if (entry != null) {
+            deletedEntries.put(entry.getEpochID(), entry);
+            return true;
+        } else {
+            return false;
+        }
+    }
+    public static TreeMap<Long, BRData> getDeletedData() {
+        return deletedEntries;
+    }
+    public static boolean retrieveEntry(long epochID) {
+        BRData entry = deletedEntries.remove(epochID);
+        if (entry != null) {
+            getUserData(entry.getUserID()).addEntry(entry);
+            return true;
+        } else {
+            return false;
         }
     }
 

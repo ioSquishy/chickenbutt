@@ -33,6 +33,9 @@ public class App {
         BRSheet.createCmd().createForServer(api, climbMaxing).join();
         ChickenButtRanks.createCmd().createForServer(api, climbMaxing).join();
         Entries.createAllEntriesCmd().createForServer(api, climbMaxing).join();
+        Entries.createRemoveEntryCmd().createForServer(api, climbMaxing).join();
+        Entries.createRetrieveEntryCmd().createForServer(api, climbMaxing).join();
+        Entries.createDeletedEntriesCmd().createForServer(api, climbMaxing).join();
         
         /*try {
             api.getServerSlashCommands(api.getServerById(climbMaxing).get()).get().forEach(cmd -> {
@@ -94,6 +97,28 @@ public class App {
                 case "allentries" :
                     event.getInteraction().createImmediateResponder().setContent("Compiling data. . .").setFlags(MessageFlag.EPHEMERAL).respond().join();
                     Entries.sendAllEntriesEmbed(event.getInteraction().getChannel().get());
+                    break;
+                case "deletedentries" :
+                    event.getInteraction().createImmediateResponder().setContent("Compiling data. . .").setFlags(MessageFlag.EPHEMERAL).respond().join();
+                    Entries.sendDeletedEntriesEmbed(event.getInteraction().getChannel().get());
+                    break;
+                case "removeentry" :
+                    long entryToRemove = event.getSlashCommandInteraction().getArgumentLongValueByIndex(0).get();
+                    boolean removedEntry = Data.removeEntry(entryToRemove);
+                    if (removedEntry) {
+                        event.getInteraction().createImmediateResponder().setContent("Removed entry: " + entryToRemove).respond().join();
+                    } else {
+                        event.getInteraction().createImmediateResponder().setContent("Could not find/remove entry: " + entryToRemove).respond().join();
+                    }
+                    break;
+                case "retrieveentry" :
+                    long entryToRetrieve = event.getSlashCommandInteraction().getArgumentLongValueByIndex(0).get();
+                    boolean retrievedEntry = Data.retrieveEntry(entryToRetrieve);
+                    if (retrievedEntry) {
+                        event.getInteraction().createImmediateResponder().setContent("Retrieved entry: " + entryToRetrieve).respond().join();
+                    } else {
+                        event.getInteraction().createImmediateResponder().setContent("Could not find/retrieve entry: " + entryToRetrieve).respond().join();
+                    }
                     break;
             }
         });
