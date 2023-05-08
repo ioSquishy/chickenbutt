@@ -15,6 +15,7 @@ import org.javacord.api.interaction.SlashCommandBuilder;
 import org.javacord.api.interaction.SlashCommandOption;
 
 import chicken.butt.Utility.Data;
+import chicken.butt.Utility.Excel;
 import chicken.butt.Utility.PaginateData;
 
 public class Entries {
@@ -50,6 +51,10 @@ public class Entries {
             .setDefaultEnabledForEveryone()
             .setEnabledInDms(false)
             .addOption(SlashCommandOption.createLongOption("epochid", "Entry to retrieve.", true));
+    }
+
+    public static void sendAllEntiresExcel(TextChannel channel) {
+        new MessageBuilder().addAttachment(new Excel(Data.getAllData()).generateExcel(), "All Entries").send(channel).join();
     }
 
     public static void sendDeletedEntriesEmbed(TextChannel channel) {

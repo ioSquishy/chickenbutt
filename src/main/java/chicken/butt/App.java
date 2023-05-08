@@ -6,9 +6,6 @@ import org.javacord.api.DiscordApi;
 import org.javacord.api.DiscordApiBuilder;
 import org.javacord.api.entity.intent.Intent;
 import org.javacord.api.entity.message.MessageFlag;
-import org.javacord.api.entity.message.component.ActionRow;
-import org.javacord.api.entity.message.component.Button;
-import org.javacord.api.entity.message.component.ButtonStyle;
 
 import chicken.butt.Commands.BRSheet;
 import chicken.butt.Commands.BRSign;
@@ -100,7 +97,11 @@ public class App {
                     break;
                 case "allentries" :
                     event.getInteraction().createImmediateResponder().setContent("Compiling data. . .").setFlags(MessageFlag.EPHEMERAL).respond().join();
-                    Entries.sendAllEntriesEmbed(event.getInteraction().getChannel().get());
+                    if (event.getSlashCommandInteraction().getArgumentBooleanValueByName("asexcel").orElse(false)) {
+                        Entries.sendAllEntiresExcel(event.getInteraction().getChannel().get());
+                    } else {
+                        Entries.sendAllEntriesEmbed(event.getInteraction().getChannel().get());
+                    }
                     break;
                 case "deletedentries" :
                     event.getInteraction().createImmediateResponder().setContent("Compiling data. . .").setFlags(MessageFlag.EPHEMERAL).respond().join();
