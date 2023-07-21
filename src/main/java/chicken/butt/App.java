@@ -53,7 +53,7 @@ public class App {
         api.addMessageCreateListener(event -> {
             String msg = event.getMessage().getContent().toLowerCase();
 
-            if (msg.contains("what") || msg.contains("wut") && event.getMessageAuthor().isBotUser()) {
+            if ((msg.contains("what") || msg.contains("wut")) && !event.getMessageAuthor().isBotUser()) {
                 try {
                     if (msg.contains("what")) {
                         event.getMessage().reply("chicken butt").get();
