@@ -19,6 +19,9 @@ import chicken.butt.Utility.DadJokeApi;
 import chicken.butt.Utility.Data;
 import io.github.cdimascio.dotenv.Dotenv;
 
+import java.util.Random;
+
+
 public class App {
     public static final DiscordApi api = new DiscordApiBuilder().setToken(Dotenv.load().get("TOKEN")).setAllNonPrivilegedIntentsAnd(Intent.MESSAGE_CONTENT, Intent.DIRECT_MESSAGES, Intent.GUILD_PRESENCES).login().join();
     
@@ -50,7 +53,7 @@ public class App {
         api.addMessageCreateListener(event -> {
             String msg = event.getMessage().getContent().toLowerCase();
 
-            if (msg.contains("what") || msg.contains("wut")) {
+            if (msg.contains("what") || msg.contains("wut") && event.getMessageAuthor().isBotUser()) {
                 try {
                     if (msg.contains("what")) {
                         event.getMessage().reply("chicken butt").get();
@@ -66,6 +69,24 @@ public class App {
                             event.getMessageAuthor().asUser().get().sendMessage("chicken but").get();
                         }
                     } catch (Error | InterruptedException | ExecutionException ee) {}
+                }
+            }
+
+            if (event.getMessageAuthor().getIdAsString().equals("376206416005955585")) {
+                int r1 = new Random().nextInt(10) + 1;
+                if (r1 <= 1) {
+                    int r2 = new Random().nextInt(2) + 1;
+                    switch (r2) {
+                        case 1 :
+                            event.getMessage().reply("your mom").join();
+                            break;
+                        case 2 :
+                            event.getMessage().reply("didnt ask").join();
+                            break;
+                        case 3 :
+                            event.getMessage().reply("shut up").join();
+                            break;
+                    }
                 }
             }
             
