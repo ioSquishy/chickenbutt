@@ -1,5 +1,7 @@
 package chicken.butt;
 
+import java.io.IOException;
+import java.net.URISyntaxException;
 import java.util.concurrent.ExecutionException;
 
 import org.javacord.api.DiscordApi;
@@ -11,7 +13,9 @@ import chicken.butt.Commands.BRSheet;
 import chicken.butt.Commands.BRSign;
 import chicken.butt.Commands.ChickenButtRanks;
 import chicken.butt.Commands.Entries;
+import chicken.butt.Commands.GetDadJoke;
 import chicken.butt.Utility.Cache;
+import chicken.butt.Utility.DadJokeApi;
 import chicken.butt.Utility.Data;
 import io.github.cdimascio.dotenv.Dotenv;
 
@@ -33,6 +37,7 @@ public class App {
         Entries.createRemoveEntryCmd().createForServer(api, climbMaxing).join();
         Entries.createRetrieveEntryCmd().createForServer(api, climbMaxing).join();
         Entries.createDeletedEntriesCmd().createForServer(api, climbMaxing).join();
+        GetDadJoke.createDadJokeCmd().createGlobal(api).join();
         
         /*try {
             api.getServerSlashCommands(api.getServerById(climbMaxing).get()).get().forEach(cmd -> {
@@ -84,6 +89,13 @@ public class App {
         api.addSlashCommandCreateListener(event -> {
             String cmd = event.getSlashCommandInteraction().getCommandName();
             switch (cmd) {
+                case "dadjoke" :
+                    try {
+                        event.getInteraction().createImmediateResponder().setContent(DadJokeApi.getDadJoke()).respond().join();
+                    } catch (URISyntaxException | IOException e) {
+                        e.printStackTrace();
+                    }
+                    break;
                 case "peerex" :
                     Data.brbUpdate(event.getInteraction().getUser().getId());
                     event.getInteraction().createImmediateResponder().setContent("gogogogo").setFlags(MessageFlag.EPHEMERAL).respond().join();
