@@ -60,7 +60,7 @@ public class Data implements Serializable {
         autoClearDailyData.schedule(initialDayReset, LocalDate.now().atStartOfDay(zoneId).plusDays(1L).toEpochSecond()-Instant.now().getEpochSecond(), TimeUnit.SECONDS);
     }
     private static void saveData() throws IOException {
-        File file = new File("userData.ser");
+        File file = new File("data/userData.ser");
         file.createNewFile();
         FileOutputStream fos = new FileOutputStream(file);
         ObjectOutputStream out = new ObjectOutputStream(fos);
@@ -69,7 +69,7 @@ public class Data implements Serializable {
         fos.close();
     }
     private static void retrieveData() throws ClassNotFoundException, IOException {
-        FileInputStream fin = new FileInputStream("userData.ser");
+        FileInputStream fin = new FileInputStream("data/userData.ser");
         ObjectInputStream in = new ObjectInputStream(fin);
         allUserData = (HashMap) in.readObject();
         in.close();
