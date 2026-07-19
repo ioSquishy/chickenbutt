@@ -1,8 +1,11 @@
 package chicken.butt;
 
+import java.io.File;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 
 import org.javacord.api.DiscordApi;
 import org.javacord.api.DiscordApiBuilder;
@@ -29,6 +32,20 @@ public class App {
         System.out.println("logged in :O");
         //init data
         new Data();
+
+        Executors.newSingleThreadScheduledExecutor().scheduleAtFixedRate(() -> {
+            try {
+                File heartbeat = new File("tmp/heartbeat");
+                if (!heartbeat.exists()) {
+                    heartbeat.createNewFile();
+                }
+            
+                // Update the "Last Modified" timestamp to the current time
+                heartbeat.setLastModified(System.currentTimeMillis());
+            } catch (IOException e) {
+                System.err.println("Failed to write health check heartbeat file: " + e.getMessage());
+            }
+        }, 0, 30, TimeUnit.SECONDS);
 
         // slash commands
         long climbMaxing = 1069042405388583053L;
