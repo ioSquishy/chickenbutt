@@ -17,29 +17,28 @@ import chicken.butt.Commands.GetDadJoke;
 import chicken.butt.Utility.Cache;
 import chicken.butt.Utility.DadJokeApi;
 import chicken.butt.Utility.Data;
-import io.github.cdimascio.dotenv.Dotenv;
 
 import java.util.Random;
 
 
 public class App {
-    public static final DiscordApi api = new DiscordApiBuilder().setToken(Dotenv.load().get("TOKEN")).setAllNonPrivilegedIntentsAnd(Intent.MESSAGE_CONTENT, Intent.DIRECT_MESSAGES, Intent.GUILD_PRESENCES).login().join();
     
-    public static void main( String[] args )
-    {
+    public static final DiscordApi api = new DiscordApiBuilder().setToken(System.getenv("DISCORD_TOKEN")).setAllNonPrivilegedIntentsAnd(Intent.MESSAGE_CONTENT, Intent.DIRECT_MESSAGES, Intent.GUILD_PRESENCES).login().join();
+    
+    public static void main( String[] args ) {
         System.out.println("logged in :O");
         //init data
         new Data();
 
         // slash commands
         long climbMaxing = 1069042405388583053L;
-        BRSign.createPeerexCmd().createForServer(api, climbMaxing).join();
-        BRSheet.createCmd().createForServer(api, climbMaxing).join();
+        // BRSign.createPeerexCmd().createForServer(api, climbMaxing).join();
+        // BRSheet.createCmd().createForServer(api, climbMaxing).join();
         ChickenButtRanks.createCmd().createForServer(api, climbMaxing).join();
-        Entries.createAllEntriesCmd().createForServer(api, climbMaxing).join();
-        Entries.createRemoveEntryCmd().createForServer(api, climbMaxing).join();
-        Entries.createRetrieveEntryCmd().createForServer(api, climbMaxing).join();
-        Entries.createDeletedEntriesCmd().createForServer(api, climbMaxing).join();
+        // Entries.createAllEntriesCmd().createForServer(api, climbMaxing).join();
+        // Entries.createRemoveEntryCmd().createForServer(api, climbMaxing).join();
+        // Entries.createRetrieveEntryCmd().createForServer(api, climbMaxing).join();
+        // Entries.createDeletedEntriesCmd().createForServer(api, climbMaxing).join();
         GetDadJoke.createDadJokeCmd().createGlobal(api).join();
         
         /*try {
@@ -94,15 +93,15 @@ public class App {
                 case "/chickenbutts" :
                     event.getMessage().reply(ChickenButtRanks.createEmbed()).join();
                     break;
-                case "/peerex" :
-                    Data.brbUpdate(event.getMessageAuthor().getId());
-                    break;
-                case "/allentries" :
-                    Entries.sendAllEntriesEmbed(event.getChannel());
-                    break;
-                case "/deletedentries" :
-                    Entries.sendDeletedEntriesEmbed(event.getChannel());
-                    break;
+                // case "/peerex" :
+                //     Data.brbUpdate(event.getMessageAuthor().getId());
+                //     break;
+                // case "/allentries" :
+                //     Entries.sendAllEntriesEmbed(event.getChannel());
+                //     break;
+                // case "/deletedentries" :
+                //     Entries.sendDeletedEntriesEmbed(event.getChannel());
+                //     break;
             }
             
         });
@@ -117,47 +116,47 @@ public class App {
                         e.printStackTrace();
                     }
                     break;
-                case "peerex" :
-                    Data.brbUpdate(event.getInteraction().getUser().getId());
-                    event.getInteraction().createImmediateResponder().setContent("gogogogo").setFlags(MessageFlag.EPHEMERAL).respond().join();
-                    break;
-                case "createsheet" :
-                    BRSheet.createEmbed(event.getInteraction().getChannel().get());
-                    event.getInteraction().createImmediateResponder().setContent(":D").setFlags(MessageFlag.EPHEMERAL).respond().join();
-                    break;
+                // case "peerex" :
+                //     Data.brbUpdate(event.getInteraction().getUser().getId());
+                //     event.getInteraction().createImmediateResponder().setContent("gogogogo").setFlags(MessageFlag.EPHEMERAL).respond().join();
+                //     break;
+                // case "createsheet" :
+                //     BRSheet.createEmbed(event.getInteraction().getChannel().get());
+                //     event.getInteraction().createImmediateResponder().setContent(":D").setFlags(MessageFlag.EPHEMERAL).respond().join();
+                //     break;
                 case "chickenbutts" :
                     event.getInteraction().createImmediateResponder().addEmbed(ChickenButtRanks.createEmbed()).respond().join();
                     break;
-                case "allentries" :
-                    event.getInteraction().createImmediateResponder().setContent("Compiling data. . .").setFlags(MessageFlag.EPHEMERAL).respond().join();
-                    if (event.getSlashCommandInteraction().getArgumentBooleanValueByName("asexcel").orElse(false)) {
-                        Entries.sendAllEntiresExcel(event.getInteraction().getChannel().get());
-                    } else {
-                        Entries.sendAllEntriesEmbed(event.getInteraction().getChannel().get());
-                    }
-                    break;
-                case "deletedentries" :
-                    event.getInteraction().createImmediateResponder().setContent("Compiling data. . .").setFlags(MessageFlag.EPHEMERAL).respond().join();
-                    Entries.sendDeletedEntriesEmbed(event.getInteraction().getChannel().get());
-                    break;
-                case "removeentry" :
-                    long entryToRemove = event.getSlashCommandInteraction().getArgumentLongValueByIndex(0).get();
-                    boolean removedEntry = Data.removeEntry(entryToRemove);
-                    if (removedEntry) {
-                        event.getInteraction().createImmediateResponder().setContent("Removed entry: " + entryToRemove).respond().join();
-                    } else {
-                        event.getInteraction().createImmediateResponder().setContent("Could not find/remove entry: " + entryToRemove).respond().join();
-                    }
-                    break;
-                case "retrieveentry" :
-                    long entryToRetrieve = event.getSlashCommandInteraction().getArgumentLongValueByIndex(0).get();
-                    boolean retrievedEntry = Data.retrieveEntry(entryToRetrieve);
-                    if (retrievedEntry) {
-                        event.getInteraction().createImmediateResponder().setContent("Retrieved entry: " + entryToRetrieve).respond().join();
-                    } else {
-                        event.getInteraction().createImmediateResponder().setContent("Could not find/retrieve entry: " + entryToRetrieve).respond().join();
-                    }
-                    break;
+                // case "allentries" :
+                //     event.getInteraction().createImmediateResponder().setContent("Compiling data. . .").setFlags(MessageFlag.EPHEMERAL).respond().join();
+                //     if (event.getSlashCommandInteraction().getArgumentBooleanValueByName("asexcel").orElse(false)) {
+                //         Entries.sendAllEntiresExcel(event.getInteraction().getChannel().get());
+                //     } else {
+                //         Entries.sendAllEntriesEmbed(event.getInteraction().getChannel().get());
+                //     }
+                //     break;
+                // case "deletedentries" :
+                //     event.getInteraction().createImmediateResponder().setContent("Compiling data. . .").setFlags(MessageFlag.EPHEMERAL).respond().join();
+                //     Entries.sendDeletedEntriesEmbed(event.getInteraction().getChannel().get());
+                //     break;
+                // case "removeentry" :
+                //     long entryToRemove = event.getSlashCommandInteraction().getArgumentLongValueByIndex(0).get();
+                //     boolean removedEntry = Data.removeEntry(entryToRemove);
+                //     if (removedEntry) {
+                //         event.getInteraction().createImmediateResponder().setContent("Removed entry: " + entryToRemove).respond().join();
+                //     } else {
+                //         event.getInteraction().createImmediateResponder().setContent("Could not find/remove entry: " + entryToRemove).respond().join();
+                //     }
+                //     break;
+                // case "retrieveentry" :
+                //     long entryToRetrieve = event.getSlashCommandInteraction().getArgumentLongValueByIndex(0).get();
+                //     boolean retrievedEntry = Data.retrieveEntry(entryToRetrieve);
+                //     if (retrievedEntry) {
+                //         event.getInteraction().createImmediateResponder().setContent("Retrieved entry: " + entryToRetrieve).respond().join();
+                //     } else {
+                //         event.getInteraction().createImmediateResponder().setContent("Could not find/retrieve entry: " + entryToRetrieve).respond().join();
+                //     }
+                //     break;
             }
         });
 

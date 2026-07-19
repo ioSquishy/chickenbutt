@@ -14,8 +14,8 @@
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <maven.compiler.source>1.16</maven.compiler.source>
-    <maven.compiler.target>1.16</maven.compiler.target>
+    <maven.compiler.source>16</maven.compiler.source>
+    <maven.compiler.target>16</maven.compiler.target>
   </properties>
 
   <dependencies>
@@ -31,12 +31,6 @@
       <artifactId>javacord</artifactId>
       <version>3.8.0</version>
       <type>pom</type>
-    </dependency>
-    <!-- env -->
-    <dependency>
-      <groupId>io.github.cdimascio</groupId>
-      <artifactId>java-dotenv</artifactId>
-      <version>5.2.2</version>
     </dependency>
     <!-- excel -->
     <dependency>
