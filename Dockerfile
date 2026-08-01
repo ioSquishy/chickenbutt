@@ -2,7 +2,7 @@
 FROM maven:3.9-eclipse-temurin-21 AS builder
 WORKDIR /app
 
-# Cache Maven dependencies
+# Cache dependencies
 COPY pom.xml .
 RUN mvn dependency:go-offline -B
 
@@ -10,14 +10,17 @@ RUN mvn dependency:go-offline -B
 COPY src ./src
 RUN mvn clean package -DskipTests
 
+# Delete the un-shaded JAR so target/ only contains the fat JAR
+RUN rm -f target/original-*.jar
+
+
 # Stage 2: Runtime image
 FROM eclipse-temurin:21-jre-alpine
 WORKDIR /app
 
-# Copy the built shaded JAR, ignoring the un-shaded 'original-' JAR
-COPY --from=builder /app/target/!(*original*).jar app.jar
+# Now target/*.jar safely matches ONLY the executable fat JAR
+COPY --from=builder /app/target/*.jar app.jar
 
-# Create volume target for persistent data (e.g., userData.ser)
 VOLUME ["/app/data"]
 
 ENTRYPOINT ["java", "-jar", "app.jar"]
