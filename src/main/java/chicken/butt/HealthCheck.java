@@ -8,7 +8,7 @@ import java.net.http.HttpResponse;
 import java.time.Duration;
 
 /**
- * Health check script for Coolify
+ * Health check script
  */
 public class HealthCheck {
     public static void main(String[] args) {
