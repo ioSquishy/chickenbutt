@@ -14,8 +14,8 @@ RUN mvn clean package -DskipTests
 FROM eclipse-temurin:21-jre-alpine
 WORKDIR /app
 
-# Copy built JAR from builder stage
-COPY --from=builder /app/target/*.jar app.jar
+# Copy the built shaded JAR, ignoring the un-shaded 'original-' JAR
+COPY --from=builder /app/target/!(*original*).jar app.jar
 
 # Create volume target for persistent data (e.g., userData.ser)
 VOLUME ["/app/data"]
