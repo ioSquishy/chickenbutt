@@ -13,13 +13,9 @@ RUN mvn clean package -DskipTests
 # Delete the un-shaded JAR so target/ only contains the fat JAR
 RUN rm -f target/original-*.jar
 
-
 # Stage 2: Runtime image
 FROM eclipse-temurin:21-jre-alpine
 WORKDIR /app
-
-# Ensure /tmp directory exists with full read/write permissions
-RUN mkdir -p /tmp && chmod 777 /tmp
 
 # Now target/*.jar safely matches ONLY the executable fat JAR
 COPY --from=builder /app/target/*.jar app.jar
